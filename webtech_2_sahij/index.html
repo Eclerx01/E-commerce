@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>welcome page</title>
+			<meta name="viewport" content="width=device-width, initial-scale=1" />
+		
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+		<link rel="stylesheet" href="c/c.css" >
+		<link rel="stylesheet" href="style_1.css" >
+	
+		<link rel="stylesheet" href="c/c.min.css" >
+		<link rel="stylesheet" href="themes/jquery.mobile.icons.min.css" >
+		<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+		<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>	
+	
+	</head>
+
+	<body>
+		
+		<div data-role="page" class="div1" data-theme="c" >
+			<div data-role="header">
+				<h1> Details </h1>
+			</div>
+			<div role="main" class="ui-content" style="text-align:center; margin-left: 150px;margin-right: 150px">
+				
+			<ul  data-role="listview" data-inset="true">
+					
+					<div id="one">
+						<div id="tab1">
+						</div>
+						
+						<div id="tab2">
+						</div>
+						
+						<div id="tab3">
+						</div>
+						
+						<div id="tab4">
+						</div>
+						
+						<div id="tab5">
+						</div>
+				<div id="cart">
+					
+				</div>
+
+			</div><!-- /content -->
+		<div data-role="footer" style="text-align: center;">	
+				<a href="login.html">logout</a>
+			</div>
+
+		</div>
+		<script>
+			$(document).ready(function() {
+
+				//Database Name, Version, Description, size of the DB
+
+				
+				var db = openDatabase('myd', '1.0', 'Bags database', 2 * 1024 * 1024);
+
+
+				$.urlParam = function(name) {
+				var res = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+				if (res ==null){
+						return null;
+						
+					}
+					return res[1]||0;
+				}
+				var detail = $.urlParam('id');
+
+				db.transaction(function(tx) {
+
+					tx.executeSql("SELECT * FROM bags where id= " + detail + " ", [], function(tx, results) {
+
+						var len = results.rows.length;
+						//var ul = $("#random").val();
+
+						for ( i = 0; i < len; i++) {
+							//var li = document.createElement("li");
+							var showid = results.rows.item(i).id;
+							var showtype = results.rows.item(i).bagtype;
+							var showbrand = results.rows.item(i).brand;
+							var showpic = results.rows.item(i).pic;
+							var showprice = results.rows.item(i).price;
+							var showdescription = results.rows.item(i).description;
+							var showquantity = results.rows.item(i).quantity;
+
+								 var tab_1= "<h3>"+"Product id: "+ showid+ "</h3>";	
+									  $("#tab1").append(tab_1);
+									  
+								
+ 								var tab_2 = "<img width = '200px' src='" + showpic + "'>";
+									  $("#tab2").append(tab_2);
+									  
+									  var tab_3= "<h4>"+"Category: "+ showtype+ "<br>" + "Brand:"+ showbrand + "<br>" + "price:$" +showprice+ "</h4>";	
+									  $("#tab3").append(tab_3);
+									  
+								var tab_4= "<p>"+"Product Detail: "+ showdescription+ "</p>";	
+									  $("#tab4").append(tab_4);
+									  
+									if(showquantity<=0){
+										var tab_5= "<p>"+"Quantity: Out Of Stock"+ "</p>";	
+									  $("#tab5").append(tab_5);
+									}
+									else
+									{
+										
+									  var tab_5= "<p>"+"Quantity: In Stock"+ "</p>";	
+									  $("#tab5").append(tab_5);
+									}
+									  
+
+							if(showquantity<=0){
+								var cart_detail = "<a href='#' class='ui-btn ui-btn-icon-right ui-icon-carat-r'>Sold Out</a>";
+						
+							$("#cart").append(cart_detail);
+							}
+						
+							else{
+							 var cart_detail = "<a href='cart.html?bagtype="+showtype+"&brand="+showbrand+"&pic="+showpic+"&price="+showprice+"' class='ui-btn ui-btn-icon-right ui-icon-carat-r'>Add to cart</a>";
+						
+							$("#cart").append(cart_detail);
+					}
+
+						}
+
+					});
+				});
+
+			});
+
+		</script>
+
+	</body>
+</html>
